@@ -20,14 +20,14 @@ import {config,DotEnvOptions} from 'dotenv-ultra'
 //default configuration is shown 
 const options = new DotEnvOptions(
  {
-                allowEmptyValues:true
-                path:resolve(cwd(), '.env')
-                example:resolve(cwd(), '.env.example')
-                ignoreProcessEnv:false
-                mode:'override'
-                safe:false
-                overwrite:false
-                envFilePrior:true
+                allowEmptyValues:true,
+                path:resolve(cwd(), '.env'),
+                example:resolve(cwd(), '.env.example'),
+                ignoreProcessEnv:false,
+                mode:'override',
+                safe:false,
+                overwrite:false,
+                envFilePrior:true,
  })
 config(options)
  ```
