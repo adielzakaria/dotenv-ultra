@@ -1,7 +1,7 @@
 {
   "name": "dotenv-extended",
   "version": "0.1.0",
-  "description": "a dotenv package with additional capabilities",
+  "description": "Loads environment variables from .env file",
   "scripts": {
     "test": "jest"
   },
