@@ -1,7 +1,7 @@
 # dotenv-ultra
 
-[dotenv-ultra](https://www.npmjs.com/package/dotenv-ultra) is a dotenv-inspired package written in typescript,dotenv-ultra is a zero-dependency module that loads environment variables from a .env file into process.env or an object of your choice. Storing configuration in the environment separate from code is based on The Twelve-Factor App methodology.that supports file extensions, multiline values and many more
-
+[dotenv-ultra](https://www.npmjs.com/package/dotenv-ultra) is a dotenv-inspired package written in typescript,dotenv-ultra is a zero-dependency module that loads environment variables from a .env file into process.env or an object of your choice. Storing configuration in the environment separate from code is based on The Twelve-Factor App methodology.that supports file extensions, multiline values and many more. start supporting me with buycoffee
+[!["Buy Me A Coffee"](https://www.buymeacoffee.com/assets/img/custom_images/orange_img.png)](https://www.buymeacoffee.com/adielzakaria)
 ## how to use
 
 ### basic usage
