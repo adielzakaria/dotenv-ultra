@@ -34,7 +34,7 @@ export class DotEnvOptions {
                 this.path=options?.path?resolveHome(options.path):resolve(cwd(), '.env')
                 this.dir=this.path?dirname(this.path):dirname(resolve(cwd(), '.env'))
                 this.example=options?.example?resolveHome(options.example):resolve(cwd(), '.env.example')
-                this.ignoreProcessEnv=options?.ignoreProcessEnv??true
+                this.ignoreProcessEnv=options?.ignoreProcessEnv??false
                 this.mode=options?.mode??'override'
                 this.safe=options?.safe??false
                 this.overwrite=options?.overwrite??false

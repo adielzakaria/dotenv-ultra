@@ -173,7 +173,7 @@ function interpolate(envValue: string, env: { [x: string]: string | undefined; }
             }
 
             // Resolve recursive interpolations
-            value = interpolate(value, env, parsed, priority)
+            value = interpolate(value as string, env, parsed, priority)
         }
 
         return newEnv.replace((parts?.[0]) as string , value)
