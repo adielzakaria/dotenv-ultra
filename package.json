@@ -11,9 +11,9 @@
   "author": "zakaria adiel",
   "license": "Apache License 2.0",
   "devDependencies": {
-    "@babel/core": "7.15.8",
-    "@babel/preset-env": "7.15.8",
-    "@babel/preset-typescript": "7.15.0",
+    "@babel/core": "7.16.0",
+    "@babel/preset-env": "7.16.0",
+    "@babel/preset-typescript": "7.16.0",
     "@jest/globals": "27.3.1",
     "@jest/types": "27.2.5",
     "@types/jest": "27.0.2",
