@@ -1,19 +1,24 @@
 {
   "name": "dotenv-ultra",
-  "version": "0.1.0",
+  "version": "0.4.0",
   "description": "Loads environment variables from .env file",
-  "main": "dist/index.js",
-  "types": "dist/index.d.ts",
+  "main":"dist/index.js",
+  "types":"dist/index.js",
   "scripts": {
     "test": "jest",
     "build": "tsc"
   },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/adielzakaria/dotenv-ultra"
+  },
+  
   "author": "zakaria adiel",
   "license": "Apache License 2.0",
   "devDependencies": {
-    "@babel/core": "7.15.8",
-    "@babel/preset-env": "7.15.8",
-    "@babel/preset-typescript": "7.15.0",
+    "@babel/core": "7.16.0",
+    "@babel/preset-env": "7.16.0",
+    "@babel/preset-typescript": "7.16.0",
     "@jest/globals": "27.3.1",
     "@jest/types": "27.2.5",
     "@types/jest": "27.0.2",
