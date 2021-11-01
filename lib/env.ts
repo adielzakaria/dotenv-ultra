@@ -1,12 +1,12 @@
 
-import { readFileSync } from 'fs';
+import { readFileSync,readdirSync } from 'fs';
 import { log } from 'console';
-import { DotEnvOptions, DotenvParseOutput } from './options';
+import { DotEnvOptions } from './options';
 import { basename, join } from 'path';
 import { Stack } from './stack';
 import { Queue } from './queue';
 import MissingEnvVarsError from './err';
-//const COMMENT = '#'
+import { DotenvParseOutput } from './types';
 const INHERITANCE = /^!(.*)/gm
 const NEWLINE = '\n'
 const MULTILINE = /\s*([\w.-]+)\s*=\s*'(?:[^\\']|\\\\|\\')*'/mg
@@ -56,19 +56,26 @@ function cascadeInheritance(src: string): string[] | undefined {
     return src.match(INHERITANCE)?.flatMap(x => x.slice(1).trim().split(','))
 }
 function initialParse(options: DotEnvOptions) {
+    if(options.merge)
+    {
+        return reduce(readdirSync(options.getMergeDir()).map(x=>parseString(parseFile(x,options.getMergeDir()))),options.mode)
+    }
     const filesQueue = new Queue<string>()
     const stackDefinitions = new Stack()
-    parseRecursive(options.dir, options.path, filesQueue, stackDefinitions)
+    debug(options.debug,`parsing main (or first encountered if merge=true) file`)
+    parseRecursive(options.getEnvFile(), filesQueue, stackDefinitions)
     while (filesQueue.size() > 0) {
         const filename = filesQueue.dequeue()
         if (filename) {
-            parseRecursive(options.dir, filename, filesQueue, stackDefinitions)
+            parseRecursive(filename.trim(), filesQueue, stackDefinitions,options.getDir(),options.debug)
         }
     }
-    return reduce(stackDefinitions, options.mode)
+    return reduce(stackDefinitions.toArray(), options.mode)
 }
-function reduce(stack: Stack<unknown>, mode: string) {
-    return stack.toArray().reduce((first: any, last: any) => {
+
+function reduce(definitions: any[], mode: string)
+{
+    return definitions.reduce((first: any, last: any) => {
         if (mode === 'override') {
             return { ...last, ...first }
         }
@@ -78,8 +85,10 @@ function reduce(stack: Stack<unknown>, mode: string) {
     }, {})
 }
 
-function parseRecursive(dir: string, filename: string, filesQueue: Queue<string>, stackDefinitions: Stack<unknown> | {}[]) {
-    const fileString = parseFile(dir, filename)
+
+function parseRecursive(filename: string, filesQueue: Queue<string>, stackDefinitions: Stack<unknown>,dir?:string,deb?:boolean) {
+    debug(deb,`parsing file${filename}`)
+    const fileString = parseFile(filename,dir)
     const inherited = cascadeInheritance(fileString)
     if (inherited) {
         filesQueue.enqueue(inherited)
@@ -87,15 +96,23 @@ function parseRecursive(dir: string, filename: string, filesQueue: Queue<string>
     stackDefinitions.push(parseString(fileString))
 }
 
-function parseFile(dir: string, filename: string) {
-    return readFileSync(join(dir, basename(filename.trim()))).toString()
+function parseFile(filename: string,dir?: string,) {
+    if(dir)
+    {
+        return readFileSync(join(dir, basename(filename))).toString()
+    }
+    else
+    {
+        return readFileSync(filename).toString()
+    }
+    
 }
 function parseExample(options: DotEnvOptions, env: {}) {
-    const src = parseFile(options.dir, options.example)
+    const src = parseFile(options.getExampleFile())
     const parsed = src.split(NEWLINES_MATCH).filter(x => filterOut(x)).map(x=>x.trim())
     const missing = difference(parsed, Object.keys(env));
     if (missing.length > 0) {
-        throw new MissingEnvVarsError(options.allowEmptyValues, options.path, options.example, missing);
+        throw new MissingEnvVarsError(options.allowEmptyValues, options.mainFile, options.example, missing);
     }
     return parsed
 
@@ -122,7 +139,7 @@ function parseMultipleLines(src: string) {
 }
 function filterOut(x: string) { return Boolean(x) && x[0] != '#' && x[0] != '!' }
 function parseLines(src: string, debug: boolean) {
-    const matches = src.split(NEWLINES_MATCH).filter(x => filterOut(x)).map(line => {
+    const matches = src.split(NEWLINES_MATCH)?.filter(x => filterOut(x))?.map(line => {
         const keyValueArr = line.match(RE_INI_KEY_VAL)
         const parsedVal = parseValue(keyValueArr)
         if (parsedVal) {
@@ -131,18 +148,31 @@ function parseLines(src: string, debug: boolean) {
         else if (debug) {
             log(`did not match key and value when parsing  ${line}`)
         }
-    })
-    return Object.fromEntries(matches as any)
+    })?.filter(x=>x)
+    if(matches){
+        return Object.fromEntries(matches as any)
+    }
+    else
+        return {}
+
 }
 function parse(options: DotEnvOptions) {
     return Object.assign({}, initialParse(options))
 
 }
+function debug(deb,context)
+{
+if(deb){
+    log(context)
+}
+}
 export function config(options: DotEnvOptions = new DotEnvOptions()):{
     [key: string]: any
 } {
     try {
+        debug(options.debug,'initializing')
         const parsed = parse(options)
+        debug(options.debug,'parsed finished')
         const env = options.ignoreProcessEnv ? {} : process.env;
         const Env = options.allowEmptyValues ? env : compact(env);
         const keys = options.safe ? parseExample(options, parsed) : undefined
@@ -155,7 +185,10 @@ export function config(options: DotEnvOptions = new DotEnvOptions()):{
         }
         return { parsed, keys }
     } catch (e) {
-        return { error: e }
+        if(options.throwOnError)
+            throw e
+        else
+            return { error: e }
     }
 }
 function interpolate(envValue: string, env: { [x: string]: string | undefined; }, parsed: DotenvParseOutput, priority: boolean): any {

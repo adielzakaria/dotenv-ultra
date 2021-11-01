@@ -1,21 +1,27 @@
 import { expect, test} from '@jest/globals'
 import { DotEnvOptions } from '../lib/options';
 import {config} from '../lib/env'
-import { dirname, join, resolve } from 'path';
+import { join, resolve } from 'path';
 import { cwd } from 'process';
-const path=join(cwd(),'test')
-const options=new DotEnvOptions({path:join(path,'.env'),example:join(path,'.env.example')});
+const options=new DotEnvOptions({relDir:'test',env:''});
+const directory=join(cwd(),'/test')
 test('test options creation',()=>
 {
 
     expect(options.allowEmptyValues).toBeTruthy();
-    expect(options.path).toEqual(resolve(path, '.env'))
-    expect(options.dir).toEqual(dirname(options.path));
-    expect(options.example).toEqual(resolve(path, '.env.example'))
+    expect(options.path).toBeUndefined();
+    expect(options.absDir).toBeUndefined();
+    expect(options.relDir).toEqual(directory)
+    expect(options.example).toEqual('.env.example')
     expect(options.ignoreProcessEnv).toBeFalsy();
     expect(options.safe).toBeFalsy();
     expect(options.overwrite).toBeFalsy();
     expect(options.mode).toEqual('override')
+    expect(options.mainFile).toEqual('.env')
+    expect(options.debug).toBeFalsy();
+    expect(options.env).toEqual('')
+    expect(options.envFilePrior).toBeTruthy();
+    expect(options.merge).toBeFalsy();
 })
 const result=config(options)
 
@@ -76,6 +82,17 @@ test('test expansions',()=>{
     expect(parsed?.MONGOLAB_URI_RECURSIVELY).toEqual(parsed?.MONGOLAB_URI)
     expect(parsed?.REFERENCING_OTHER_FILES_VARIABLES).toEqual(`${parsed?.AFTER_LINE}-.env-${parsed?.envdev}`)
 })
+
+})
+test('test merge', () => {
+    let options=new DotEnvOptions({relDir:'test/config',merge:true,env:'dev',safe:true});
+    //because we're using the merge option the mainfile property will be ignored 
+    expect(options.mainFile).toEqual('.env.dev')
+    expect(options.merge).toBeTruthy()
+    expect(options.getMergeDir()).toEqual(join(cwd(),'test/config'))
+    let result=config(options)
+    expect(result?.error).toBeDefined()
+    options=new DotEnvOptions({relDir:'test',merge:true,env:'dev',safe:true,throwOnError:true});
 
 })
 
