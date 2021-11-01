@@ -1,6 +1,5 @@
 # dotenv-ultra
 
-
 [dotenv-ultra](https://www.npmjs.com/package/dotenv-ultra) is a dotenv-inspired package written in typescript,dotenv-ultra is a zero-dependency module that loads environment variables from a .env file into process.env or an object of your choice,it supports file extensions, multiline values and many more. Storing configuration in the environment separate from code is based on The Twelve-Factor App methodology. start supporting me with buycoffee
 [!["Buy Me A Coffee"](https://www.buymeacoffee.com/assets/img/custom_images/orange_img.png)](https://www.buymeacoffee.com/adielzakaria)
 
@@ -114,7 +113,7 @@ the option make the parser print some useful information to the console , only a
 
 ## file structure and rules
 
----.env files
+### .env files
 
 * My_var= value, this designates the basic definition of an environment variable. variable names and keys are trimmed by default.
 * empty lines are ignored
@@ -135,7 +134,9 @@ if the main file inherit from many files they should be separated by commas, add
  inheritance can appear in any line of the file, encountered names are evaluated from left to right, first line to last, same depth  level to next level , depending on the defined mode the value of the variable will be the first or the last in the stack.
 the inheritance syntax can be useful to define default values for different files and to separate .env files depending on the context but still be able to easily integrate all of them with the minimum amount of code
 * '#' designs a comment it will be ignored by the parser, inline and multiline comments are not supported at the moment
----.example file
+
+### .example file
+
 * only one example file is currently supported
 * the required keys are written one by one, each in a line , just the name of the key with no trailing = or anything ,
 * the .example file should contain all the keys from the main file and all the other inherited files
