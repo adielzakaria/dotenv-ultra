@@ -71,6 +71,11 @@ test('test quotes logic',()=>
     expect(parsed?.DOUBLE_QUOTES).toEqual("double_quotes")
     expect(parsed?.DOUBLE_QUOTES_SPACED).toEqual("    double quotes    ")
 })
+test('test inline comments', () => {
+
+    expect(parsed?.INLINE_COMMENTS_SINGLE_QUOTES).toEqual('inline comments outside of #singlequotes')
+    expect(parsed?.INLINE_COMMENTS_DOUBLE_QUOTES).toEqual('inline comments outside of #doublequotes')
+})
 test('test expansions',()=>{
 
     expect(parsed?.BASIC_DOLLER_UNEXPAND).toEqual('$BASIC')
