@@ -27,7 +27,7 @@ const options = new DotEnvOptions(
         mainFile: '.env',
         env: '',
         example: '.env.example',
-        allowEmptyValues?: true,
+        allowEmptyValues: true,
         mode: 'override',
         safe: false,
         overwrite: false,
