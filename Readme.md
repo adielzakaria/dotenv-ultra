@@ -142,19 +142,24 @@ the inheritance syntax can be useful to define default values for different file
 * the .example file should contain all the keys from the main file and all the other inherited files
 * the .example doesn't support inheritance as of yet, if an inheritance directive is encountered it'll only be ignored
 
-## plans
+## FAQ
 
-* increase type safety and robustness
+### Q: how to create default values ?
 
-* implement more features and options
+A:by creating an .env.base file that contains all default values and the common values for different life cycle of your project, you can extend it using the inheritance syntax, anywhere in your .env file write
+! .env.base, with this peace of code you ensure that the parser will read the base file, and by default will override any entries that are also present in the inheriting files
 
-* add support for webpack plugins and other bundlers
+### Q: is variable expansion of values defined in other files possible?
 
-* create a Deno port
+A:yes, whether you're merging or using the inheritance syntax the parser will read all necessary files before attempting to expand variables, making cross-file expansion a breeze.
 
 ## Changelog
 
 see [changelog](https://github.com/adielzakaria/dotenv-ultra/blob/master/changelog.md)
+
+## licence
+
+see [Licence] (<https://github.com/adielzakaria/dotenv-ultra/blob/master/LICENSE>)
 
 ## inspired by
 
