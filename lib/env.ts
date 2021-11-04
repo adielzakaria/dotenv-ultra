@@ -1,16 +1,17 @@
 
 import { readFileSync,readdirSync } from 'fs';
-import { log } from 'console';
+
 import { DotEnvOptions } from './options';
 import { basename, join } from 'path';
 import { Stack } from './stack';
 import { Queue } from './queue';
 import MissingEnvVarsError from './err';
 import { DotenvParseOutput } from './types';
+import { log } from 'console';
 const INHERITANCE = /^!(.*)/gm
 const NEWLINE = '\n'
 const MULTILINE = /\s*([\w.-]+)\s*=\s*'(?:[^\\']|\\\\|\\')*'/mg
-const RE_INI_KEY_VAL = /([\w.-]+)\s*=\s*(.*)?/
+const RE_INI_KEY_VAL = /^\s*([\w.-]+)\s*=\s*("[^"]*"|'[^']*'|[^#]*)?(\s*|\s*#.*)?$/
 const RE_NEWLINES = /\\n/g
 const NEWLINES_MATCH = /\r\n|\n|\r/
 //const EXPANDED_VARIABLES=/\${(?:[^\\}]|\\\\|\\})*}/g
