@@ -1,5 +1,9 @@
 # changelog
 
+## 1.0.0
+
+added support for inline comments
+
 ## 0.4
 
 *added a number of new options :
